@@ -22,17 +22,16 @@ sub __get_task_name {
     $task;
 }
 
-sub new {
-    my $class = shift;
-    my $self = $class->SUPER::new(@_);
+sub __add_handlers {
+    my $ua = shift;
 
-    $self->add_handler(response_data => sub {
+    $ua->add_handler(response_data => sub {
         my ($resp, $ua, $h, $data) = @_;
 
         my $task = __get_task_name($resp);
 
         my $progress = Progress::Any->get_indicator(task=>$task);
-        unless ($self->{_pa_data}{set_target}++) {
+        unless ($ua->{_pa_data}{set_target}++) {
             $progress->pos(0);
             if (my $cl = $resp->content_length) {
                 $progress->target($cl);
@@ -47,7 +46,7 @@ sub new {
         1;
     });
 
-    $self->add_handler(response_done => sub {
+    $ua->add_handler(response_done => sub {
         my ($resp, $ua, $h) = @_;
 
         my $task = __get_task_name($resp);
@@ -60,22 +59,56 @@ sub new {
         no warnings 'once';
         delete $Progress::Any::indicators{$task};
     });
+}
 
+sub new {
+    my $class = shift;
+    my $self = $class->SUPER::new(@_);
+
+    __add_handlers($self);
     $self;
 }
 
 1;
-# ABSTRACT: LWP::UserAgent subclass that uses Progress::Any
+# ABSTRACT: See progress for your LWP::UserAgent requests
 
 =head1 SYNOPSIS
+
+Use as L<LWP::UserAgent> subclass:
+
+ use LWP::UserAgent::ProgressAny;
+ use Progress::Any::Output;
+
+ Progress::Any::Output->set("TermProgressBarColor");
+ my $ua = LWP::UserAgent::ProgressAny->new;
+ my $resp = $ua->get("http://example.com/some-big-file");
+ # you will see a progress bar in your terminal
+
+Use with standard LWP::UserAgent or other subclasses:
+
+ use LWP::UserAgent;
+ use LWP::UserAgent::ProgressAny;
+ use Progress::Any::Output;
+
+ my $ua = LWP::UserAgent->new;
+ LWP::UserAgent::ProgressAny::__add_handlers($ua);
+ ...
 
 
 =head1 DESCRIPTION
 
+This module lets you see progress indicators when you are doing requests with
+L<LWP::UserAgent>.
+
+This module uses L<Progress::Any> framework.
+
 
 =head1 SEE ALSO
 
-L<LWP::UserAgent::ProgressBar> is a similar module. It uses L<Term::ProgressBar>
-to display progress bar and introduces two new methods: C<get_with_progress> and
-C<put_with_progress>.
-
+L<LWP::UserAgent::ProgressBar> (LU::PB) is a similar module. It uses
+L<Term::ProgressBar> to display progress bar and introduces two new methods:
+C<get_with_progress> and C<put_with_progress>. Compared to
+LWP::UserAgent::ProgressAny (LU::PA): LU::PA uses L<Progress::Any> so you can
+get progress notification via means other than terminal progress bar simply by
+choosing another progress output. LU::PA is also more transparent, you don't
+have to use a different method to do requests.
