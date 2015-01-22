@@ -119,6 +119,14 @@ L<LWP::UserAgent>.
 
 This module uses L<Progress::Any> framework.
 
+Sample output:
+
+=begin HTML
+
+<img src="https://perlancar.files.wordpress.com/2015/01/screenshot-lwp-ua-progany-12.jpg" />
+
+=end HTML
+
 
 =head1 SEE ALSO
 
