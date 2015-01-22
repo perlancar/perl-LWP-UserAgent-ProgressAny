@@ -57,7 +57,7 @@ sub __add_handlers {
         # cleanup so the number of tasks can be kept low. XXX we should do this
         # via API.
         no warnings 'once';
-        delete $Progress::Any::indicators{$task};
+        #delete $Progress::Any::indicators{$task};
     });
 }
 
@@ -79,8 +79,8 @@ Use as L<LWP::UserAgent> subclass:
  use LWP::UserAgent::ProgressAny;
  use Progress::Any::Output;
 
- Progress::Any::Output->set("TermProgressBarColor");
  my $ua = LWP::UserAgent::ProgressAny->new;
+ Progress::Any::Output->set("TermProgressBarColor");
  my $resp = $ua->get("http://example.com/some-big-file");
  # you will see a progress bar in your terminal
 
@@ -92,7 +92,8 @@ Use with standard LWP::UserAgent or other subclasses:
 
  my $ua = LWP::UserAgent->new;
  LWP::UserAgent::ProgressAny::__add_handlers($ua);
- ...
+ Progress::Any::Output->set("TermProgressBarColor");
+ my $resp = $ua->get("http://example.com/some-big-file");
 
 
 =head1 DESCRIPTION
