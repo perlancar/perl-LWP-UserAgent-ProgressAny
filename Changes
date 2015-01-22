@@ -1,5 +1,12 @@
 Revision history for LWP-UserAgent-ProgressAny
 
+0.04    2015-01-22 (PERLANCAR)
+
+	- No functional changes.
+
+	- [doc] Add screenshot.
+
+
 0.03    2015-01-22 (PERLANCAR)
 
 	- Show download size in message.
