@@ -132,10 +132,11 @@ Sample output:
 
 L<LWP::UserAgent::ProgressBar> (LU::PB) is a similar module. It uses
 L<Term::ProgressBar> to display progress bar and introduces two new methods:
-C<get_with_progress> and C<put_with_progress>. Compared to
+C<get_with_progress> and C<post_with_progress>. Compared to
 LWP::UserAgent::ProgressAny (LU::PA): LU::PA uses L<Progress::Any> so you can
 get progress notification via means other than terminal progress bar simply by
 choosing another progress output. LU::PA is also more transparent, you don't
-have to use a different method to do requests.
+have to use a different method to do requests. Lastly, LU::PA can be used with
+standard LWP::UserAgent or its other subclasses.
 
 L<HTTP::Tiny::ProgressAny>
