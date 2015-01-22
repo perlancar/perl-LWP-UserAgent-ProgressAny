@@ -137,3 +137,5 @@ LWP::UserAgent::ProgressAny (LU::PA): LU::PA uses L<Progress::Any> so you can
 get progress notification via means other than terminal progress bar simply by
 choosing another progress output. LU::PA is also more transparent, you don't
 have to use a different method to do requests.
+
+L<HTTP::Tiny::ProgressAny>
