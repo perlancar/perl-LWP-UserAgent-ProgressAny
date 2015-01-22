@@ -38,42 +38,38 @@ sub __add_handlers {
                 $progress->target($cl);
             }
         }
-        my $new_pos = $progress->pos() + length($data);
-        $progress->update(
-            pos => $new_pos,
-            message => sub {
-                my @msg = (
-                    "Downloading ",
-                    $resp->{_request}{_uri},
-                    " ",
-                    format_metric($new_pos),
-                );
-                if ($progress->target) {
-                    push @msg, "/", format_metric($progress->target);
-                }
-                # XXX show speed
+        my $new_pos = $progress->pos + length($data);
+        my $target  = $progress->target;
+
+        if ($target && $new_pos >= $target) {
+            $progress->finish;
+
+            # cleanup so the number of tasks can be kept low. XXX we should do
+            # this via API.
+            no warnings 'once';
+            delete $Progress::Any::indicators{$task};
+            delete $ua->{_pa_data}{set_target}{"$resp"};
+        } else {
+            $progress->update(
+                pos => $new_pos,
+                message => sub {
+                    my @msg = (
+                        "Downloading ",
+                        $resp->{_request}{_uri},
+                        " ",
+                        format_metric($new_pos),
+                    );
+                    if ($progress->target) {
+                        push @msg, "/", format_metric($progress->target);
+                    }
+                    # XXX show speed
                 join "", @msg;
-            },
-        );
+                },
+            );
+        }
 
         # so we are called again for the next chunk
         1;
-    });
-
-    $ua->add_handler(response_done => sub {
-        my ($resp, $ua, $h) = @_;
-
-        my $task = __get_task_name($resp);
-
-        my $progress = Progress::Any->get_indicator(task=>$task);
-        $progress->finish;
-
-        # cleanup so the number of tasks can be kept low. XXX we should do this
-        # via API.
-        no warnings 'once';
-        delete $Progress::Any::indicators{$task};
-
-        delete $ua->{_pa_data}{set_target}{"$resp"};
     });
 }
 
