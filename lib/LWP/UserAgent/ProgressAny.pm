@@ -31,7 +31,7 @@ sub __add_handlers {
         my $task = __get_task_name($resp);
 
         my $progress = Progress::Any->get_indicator(task=>$task);
-        unless ($ua->{_pa_data}{set_target}++) {
+        unless ($ua->{_pa_data}{set_target}{"$resp"}++) {
             $progress->pos(0);
             if (my $cl = $resp->content_length) {
                 $progress->target($cl);
@@ -57,7 +57,9 @@ sub __add_handlers {
         # cleanup so the number of tasks can be kept low. XXX we should do this
         # via API.
         no warnings 'once';
-        #delete $Progress::Any::indicators{$task};
+        delete $Progress::Any::indicators{$task};
+
+        delete $ua->{_pa_data}{set_target}{"$resp"};
     });
 }
 
