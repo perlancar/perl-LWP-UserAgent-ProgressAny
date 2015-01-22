@@ -1,5 +1,17 @@
 Revision history for LWP-UserAgent-ProgressAny
 
+0.05    2015-01-22 (PERLANCAR)
+
+	- No functional changes.
+
+	- [Refactor] combine response_done & response_data handlers so less
+	  code is duplicated.
+
+	- [doc] Update/fix comparison with LWP::UserAgent::ProgressBar.
+
+	- [doc] Mention HTTP::Tiny::ProgressAny.
+
+
 0.04    2015-01-22 (PERLANCAR)
 
 	- No functional changes.
