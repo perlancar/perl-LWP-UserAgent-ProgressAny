@@ -7,6 +7,7 @@ use 5.010001;
 use strict;
 use warnings;
 
+use Number::Format::Metric qw(format_metric);
 use Progress::Any;
 use Scalar::Util qw(refaddr);
 
@@ -37,9 +38,22 @@ sub __add_handlers {
                 $progress->target($cl);
             }
         }
+        my $new_pos = $progress->pos() + length($data);
         $progress->update(
-            pos => $progress->pos() + length($data),
-            message => "Downloading " . $resp->{_request}{_uri},
+            pos => $new_pos,
+            message => sub {
+                my @msg = (
+                    "Downloading ",
+                    $resp->{_request}{_uri},
+                    " ",
+                    format_metric($new_pos),
+                );
+                if ($progress->target) {
+                    push @msg, "/", format_metric($progress->target);
+                }
+                # XXX show speed
+                join "", @msg;
+            },
         );
 
         # so we are called again for the next chunk
