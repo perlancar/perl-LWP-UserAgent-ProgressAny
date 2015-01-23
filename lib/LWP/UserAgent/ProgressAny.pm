@@ -63,7 +63,7 @@ sub __add_handlers {
                         push @msg, "/", format_metric($progress->target);
                     }
                     # XXX show speed
-                join "", @msg;
+                    join "", @msg;
                 },
             );
         }
