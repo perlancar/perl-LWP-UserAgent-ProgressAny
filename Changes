@@ -1,5 +1,11 @@
 Revision history for LWP-UserAgent-ProgressAny
 
+0.06    2015-01-23 (PERLANCAR)
+
+	- [ux] Markup message so it can be elided more nicely using
+	  String::Elide::Parts.
+
+
 0.05    2015-01-22 (PERLANCAR)
 
 	- No functional changes.
