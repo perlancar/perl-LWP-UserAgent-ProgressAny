@@ -54,9 +54,12 @@ sub __add_handlers {
                 pos => $new_pos,
                 message => sub {
                     my @msg = (
-                        "Downloading ",
+                        "<elspan prio=2>Downloading </elspan>",
+
+                        "<elspan prio=3 truncate=middle>",
                         $resp->{_request}{_uri},
-                        " ",
+                        " </elspan>",
+
                         format_metric($new_pos),
                     );
                     if ($progress->target) {
